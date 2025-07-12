@@ -14,6 +14,12 @@ const EMOTION_SCORE: Record<string, number> = {
   '피곤': 2,
 };
 
+interface EmotionLog {
+  date: string;
+  emotion: string;
+  memo: string;
+}
+
 function getLast7Days() {
   const arr = [];
   const today = new Date();
@@ -29,11 +35,11 @@ export default function EmotionTrendGraph() {
   const [data, setData] = useState<{ date: string; score: number }[]>([]);
 
   useEffect(() => {
-    const logs = JSON.parse(localStorage.getItem('emotionLogs') || '[]');
+    const logs: EmotionLog[] = JSON.parse(localStorage.getItem('emotionLogs') || '[]');
     const days = getLast7Days();
     // 날짜별로 emotion 점수 매핑
     const mapped = days.map((d) => {
-      const log = logs.find((l: any) => l.date.slice(5, 10) === d);
+      const log = logs.find((l) => l.date.slice(5, 10) === d);
       return {
         date: d,
         score: log ? (EMOTION_SCORE[log.emotion] ?? 5) : 0,

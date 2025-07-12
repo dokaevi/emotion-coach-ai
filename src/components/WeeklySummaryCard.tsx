@@ -5,14 +5,20 @@ const EMOTION_SCORE: Record<string, number> = {
   '기쁨': 9, '평온': 7, '감사': 8, '무기력': 3, '짜증': 4, '불안': 2, '슬픔': 1, '피곤': 2,
 };
 
-function getWeeklyLogs() {
-  const logs = JSON.parse(localStorage.getItem('emotionLogs') || '[]');
+interface EmotionLog {
+  date: string;
+  emotion: string;
+  memo: string;
+}
+
+function getWeeklyLogs(): EmotionLog[] {
+  const logs: EmotionLog[] = JSON.parse(localStorage.getItem('emotionLogs') || '[]');
   return logs
-    .sort((a: any, b: any) => b.date.localeCompare(a.date))
+    .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 7);
 }
 
-function getTop3Emotions(logs: any[]) {
+function getTop3Emotions(logs: EmotionLog[]) {
   const count: Record<string, number> = {};
   logs.forEach(l => { count[l.emotion] = (count[l.emotion] || 0) + 1; });
   return Object.entries(count)
@@ -21,13 +27,13 @@ function getTop3Emotions(logs: any[]) {
     .map(([emotion, cnt]) => `${emotion} (${cnt}회)`);
 }
 
-function getAvgScore(logs: any[]) {
+function getAvgScore(logs: EmotionLog[]) {
   const scores = logs.map(l => EMOTION_SCORE[l.emotion] ?? 5);
   if (!scores.length) return '-';
   return (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1);
 }
 
-function getKeywords(logs: any[]) {
+function getKeywords(logs: EmotionLog[]) {
   // 메모에서 단어 빈도 상위 3개 추출 (간단 버전)
   const all = logs.map(l => l.memo).join(' ');
   const words = all.split(/\s+/).filter(w => w.length > 1);

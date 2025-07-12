@@ -9,15 +9,21 @@ const EMOTIONS = [
   { key: "calm", label: "평온", emoji: "😌" },
 ];
 
+interface EmotionLog {
+  date: string;
+  emotion: string;
+  memo: string;
+}
+
 function getToday() {
   const d = new Date();
   return d.toISOString().slice(0, 10); // YYYY-MM-DD
 }
 
-function getLast7Logs() {
-  const logs = JSON.parse(localStorage.getItem("emotionLogs") || "[]");
+function getLast7Logs(): EmotionLog[] {
+  const logs: EmotionLog[] = JSON.parse(localStorage.getItem("emotionLogs") || "[]");
   return logs
-    .sort((a: any, b: any) => b.date.localeCompare(a.date))
+    .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 7)
     .reverse();
 }
@@ -38,8 +44,8 @@ export default function TodayEmotionInput() {
       emotion: emotionObj ? emotionObj.label : selected,
       memo,
     };
-    const prev = JSON.parse(localStorage.getItem("emotionLogs") || "[]");
-    const filtered = prev.filter((item: any) => item.date !== today);
+    const prev: EmotionLog[] = JSON.parse(localStorage.getItem("emotionLogs") || "[]");
+    const filtered = prev.filter((item) => item.date !== today);
     const next = [...filtered, data];
     localStorage.setItem("emotionLogs", JSON.stringify(next));
     setSaved(true);
@@ -57,7 +63,7 @@ export default function TodayEmotionInput() {
       });
       const data = await res.json();
       setAiComment(data.comment || 'AI 코멘트 생성 실패');
-    } catch (e) {
+    } catch {
       setAiComment('AI 코멘트 요청 중 오류 발생');
     } finally {
       setLoading(false);
