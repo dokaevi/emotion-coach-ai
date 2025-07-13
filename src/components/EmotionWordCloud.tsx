@@ -1,10 +1,20 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { EmotionLog } from '@/types/emotion';
+// @ts-expect-error: d3-cloud는 타입 정의가 없습니다.
 import cloud from 'd3-cloud';
 
 interface EmotionWordCloudProps {
   logs: EmotionLog[];
+}
+
+interface WordCloudWord {
+  text: string;
+  size: number;
+  value: number;
+  x?: number;
+  y?: number;
+  rotate?: number;
 }
 
 const COLORS = ['#6366f1', '#60a5fa', '#818cf8', '#a5b4fc', '#fbbf24', '#f472b6', '#34d399', '#f87171'];
@@ -12,7 +22,7 @@ const FONT_FAMILY = 'Pretendard, Noto Sans KR, sans-serif';
 
 export default function EmotionWordCloud({ logs }: EmotionWordCloudProps) {
   const [words, setWords] = useState<{ text: string; value: number }[]>([]);
-  const [layout, setLayout] = useState<any[]>([]);
+  const [layout, setLayout] = useState<WordCloudWord[]>([]);
   const [ready, setReady] = useState(false);
   const width = 320;
   const height = 220;
@@ -48,8 +58,8 @@ export default function EmotionWordCloud({ logs }: EmotionWordCloudProps) {
       .padding(2)
       .rotate(() => (Math.random() > 0.5 ? 0 : 90))
       .font(FONT_FAMILY)
-      .fontSize(d => d.size as number)
-      .on('end', (out: any[]) => {
+      .fontSize((d: WordCloudWord) => d.size)
+      .on('end', (out: WordCloudWord[]) => {
         setLayout(out);
         setReady(true);
       })

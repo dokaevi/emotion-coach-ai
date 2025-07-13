@@ -1,6 +1,5 @@
 'use client';
 import WeeklySummaryCard from './WeeklySummaryCard';
-import { useState } from 'react';
 
 export default function WeeklySummaryTabs() {
   // 탭 없이 감정 요약 카드만 단일로 노출

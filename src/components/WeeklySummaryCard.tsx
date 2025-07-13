@@ -2,16 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { EmotionLog } from '@/types/emotion';
 
-const EMOTION_SCORE: Record<string, number> = {
-  '기쁨': 9, '평온': 7, '감사': 8, '무기력': 3, '불안': 2, '슬픔': 1, '피곤': 2,
-  '뿌듯함': 9, '감사함': 8, '설렘': 8, '만족함': 7,
-  '외로움': 2, '실망': 3, '우울함': 1, '그리움': 4,
-  '답답함': 3, '짜증': 4, '격분': 2, '원망': 2,
-  '걱정': 3, '긴장': 4, '압도됨': 2, '불확실함': 3,
-  '지침': 2, '탈진': 2, '졸림': 3, '번아웃': 1,
-  '평온함': 8, '편안함': 7, '균형잡힘': 8, '집중됨': 7,
-};
-
 function getTop3Emotions(logs: EmotionLog[]) {
   const count: Record<string, number> = {};
   logs.forEach(l => { 

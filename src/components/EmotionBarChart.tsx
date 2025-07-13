@@ -20,19 +20,6 @@ export default function EmotionBarChart({ logs }: EmotionBarChartProps) {
     count,
   }));
 
-  // 감정별 색상 매핑
-  const getEmotionColor = (emotion: string) => {
-    const colors: Record<string, string> = {
-      '기쁨': '#FFD700',
-      '슬픔': '#87CEEB',
-      '분노': '#FF6B6B',
-      '불안': '#FFA500',
-      '피로': '#8B4513',
-      '안정': '#90EE90',
-    };
-    return colors[emotion] || '#3B82F6';
-  };
-
   if (chartData.length === 0) {
     return (
       <div className="w-full max-w-sm mx-auto bg-white rounded-xl shadow p-4 mt-4">

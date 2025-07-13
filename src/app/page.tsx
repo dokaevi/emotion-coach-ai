@@ -2,7 +2,6 @@
 import TodayEmotionInput from '@/components/TodayEmotionInput';
 import LogoHeader from '@/components/LogoHeader';
 import Link from 'next/link';
-import EmotionSelector from '@/components/EmotionSelector';
 import { useState } from 'react';
 import { EMOTION_CATEGORIES } from '@/types/emotion';
 
@@ -31,7 +30,6 @@ const analysisCards = [
 
 export default function Home() {
   // 감정 선택 상태 관리 (감정 입력 UI 분리)
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [showInput, setShowInput] = useState(false);
 
   return (
@@ -61,7 +59,7 @@ export default function Home() {
           {EMOTION_CATEGORIES.map((category) => (
             <button
               key={category.id}
-              onClick={() => { setSelectedCategory(category.id); setShowInput(true); }}
+              onClick={() => { setShowInput(true); }}
               className="flex flex-col items-center p-4 rounded-xl border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all shadow-sm text-lg font-medium"
               style={{ borderColor: category.color + '40' }}
             >
