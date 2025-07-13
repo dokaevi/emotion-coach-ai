@@ -1,15 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { EMOTION_CATEGORIES, EmotionCategory, SubEmotion } from '@/types/emotion';
 
 interface EmotionSelectorProps {
   onEmotionSelect: (mainEmotion: string, subEmotion: string, question: string) => void;
+  initialMainEmotion?: string | null;
 }
 
-export default function EmotionSelector({ onEmotionSelect }: EmotionSelectorProps) {
+export default function EmotionSelector({ onEmotionSelect, initialMainEmotion }: EmotionSelectorProps) {
   const [selectedCategory, setSelectedCategory] = useState<EmotionCategory | null>(null);
   const [showSubEmotions, setShowSubEmotions] = useState(false);
+
+  useEffect(() => {
+    if (initialMainEmotion) {
+      const found = EMOTION_CATEGORIES.find(cat => cat.id === initialMainEmotion || cat.name === initialMainEmotion);
+      if (found) {
+        setSelectedCategory(found);
+        setShowSubEmotions(true);
+      }
+    }
+  }, [initialMainEmotion]);
 
   const handleCategorySelect = (category: EmotionCategory) => {
     setSelectedCategory(category);

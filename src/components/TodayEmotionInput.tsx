@@ -109,9 +109,9 @@ export default function TodayEmotionInput({ initialMainEmotion = null, onReset }
 
   return (
     <div className="flex flex-col items-center w-full">
-      {/* 안내문구 완전 제거, EmotionSelector에서만 노출 */}
-      {!selectedMainEmotion ? (
-        <EmotionSelector onEmotionSelect={handleEmotionSelect} />
+      {/* 1. 하위 감정(2차 감정) 선택이 완료될 때까지 EmotionSelector만 노출 */}
+      {(!selectedMainEmotion || !selectedSubEmotion) ? (
+        <EmotionSelector onEmotionSelect={handleEmotionSelect} initialMainEmotion={selectedMainEmotion} />
       ) : (
         <div className="w-full space-y-4">
           <div className="text-center p-4 bg-blue-50 rounded-lg">
@@ -165,7 +165,7 @@ export default function TodayEmotionInput({ initialMainEmotion = null, onReset }
           </div>
         </div>
       )}
-      {selectedMainEmotion && (
+      {selectedMainEmotion && selectedSubEmotion && (
         <button
           className={`fixed bottom-4 left-1/2 -translate-x-1/2 w-[90vw] max-w-sm py-3 rounded-lg font-semibold text-white transition
             ${memo.trim() ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300 cursor-not-allowed"}
