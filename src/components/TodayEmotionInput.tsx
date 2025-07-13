@@ -180,7 +180,8 @@ export default function TodayEmotionInput({ initialMainEmotion = null, onReset }
           감정이 저장되었습니다! 🎉
         </div>
       )}
-      {aiComment && (
+      {/* AI 코멘트는 saved가 true이거나 aiComment가 있을 때 항상 하단에 노출 */}
+      {(saved || aiComment) && aiComment && (
         <div className="mt-8 p-4 bg-blue-50 rounded-lg text-gray-800 text-sm whitespace-pre-line">
           <div className="font-semibold mb-2">💭 AI 코멘트</div>
           {aiComment}
