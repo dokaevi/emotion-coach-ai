@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import EmotionSelector from "./EmotionSelector";
 import { EmotionLog } from "@/types/emotion";
 
@@ -16,8 +16,13 @@ function getLast7Logs(): EmotionLog[] {
     .reverse();
 }
 
-export default function TodayEmotionInput() {
-  const [selectedMainEmotion, setSelectedMainEmotion] = useState<string | null>(null);
+interface TodayEmotionInputProps {
+  initialMainEmotion?: string | null;
+  onReset?: () => void;
+}
+
+export default function TodayEmotionInput({ initialMainEmotion = null, onReset }: TodayEmotionInputProps) {
+  const [selectedMainEmotion, setSelectedMainEmotion] = useState<string | null>(initialMainEmotion);
   const [selectedSubEmotion, setSelectedSubEmotion] = useState<string | null>(null);
   const [question, setQuestion] = useState<string>("");
   const [memo, setMemo] = useState("");
@@ -25,6 +30,14 @@ export default function TodayEmotionInput() {
   const [saved, setSaved] = useState(false);
   const [aiComment, setAiComment] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setSelectedMainEmotion(initialMainEmotion);
+    setSelectedSubEmotion(null);
+    setQuestion("");
+    setMemo("");
+    setScore(5);
+  }, [initialMainEmotion]);
 
   const handleEmotionSelect = (mainEmotion: string, subEmotion: string, question: string) => {
     setSelectedMainEmotion(mainEmotion);
@@ -60,7 +73,7 @@ export default function TodayEmotionInput() {
     setQuestion("");
     setLoading(true);
     setAiComment(null);
-    
+    if (onReset) onReset();
     try {
       const logs = getLast7Logs();
       const res = await fetch('/api/ai-comment', {
@@ -83,6 +96,7 @@ export default function TodayEmotionInput() {
     setQuestion("");
     setMemo("");
     setScore(5);
+    if (onReset) onReset();
   };
 
   const getScoreEmoji = (score: number) => {
