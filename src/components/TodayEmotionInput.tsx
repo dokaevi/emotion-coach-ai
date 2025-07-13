@@ -21,6 +21,7 @@ export default function TodayEmotionInput() {
   const [selectedSubEmotion, setSelectedSubEmotion] = useState<string | null>(null);
   const [question, setQuestion] = useState<string>("");
   const [memo, setMemo] = useState("");
+  const [score, setScore] = useState<number>(5);
   const [saved, setSaved] = useState(false);
   const [aiComment, setAiComment] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -41,7 +42,7 @@ export default function TodayEmotionInput() {
       mainEmotion: selectedMainEmotion,
       subEmotion: selectedSubEmotion,
       text: memo,
-      score: 5, // 기본값, 나중에 점수 입력 기능 추가 가능
+      score: score,
       timestamp: Date.now(),
     };
     
@@ -53,6 +54,7 @@ export default function TodayEmotionInput() {
     setSaved(true);
     setTimeout(() => setSaved(false), 1500);
     setMemo("");
+    setScore(5);
     setSelectedMainEmotion(null);
     setSelectedSubEmotion(null);
     setQuestion("");
@@ -80,6 +82,15 @@ export default function TodayEmotionInput() {
     setSelectedSubEmotion(null);
     setQuestion("");
     setMemo("");
+    setScore(5);
+  };
+
+  const getScoreEmoji = (score: number) => {
+    if (score >= 8) return "😊";
+    if (score >= 6) return "🙂";
+    if (score >= 4) return "😐";
+    if (score >= 2) return "😔";
+    return "😢";
   };
 
   return (
@@ -101,6 +112,31 @@ export default function TodayEmotionInput() {
             >
               감정 다시 선택하기
             </button>
+          </div>
+          
+          {/* 감정 점수 입력 */}
+          <div className="w-full">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              이 감정의 강도는 어느 정도인가요? {getScoreEmoji(score)}
+            </label>
+            <div className="flex items-center gap-3">
+              <input
+                type="range"
+                min="1"
+                max="10"
+                value={score}
+                onChange={(e) => setScore(Number(e.target.value))}
+                className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              />
+              <span className="text-lg font-bold text-blue-600 min-w-[2rem] text-center">
+                {score}
+              </span>
+            </div>
+            <div className="flex justify-between text-xs text-gray-500 mt-1">
+              <span>매우 나쁨</span>
+              <span>보통</span>
+              <span>매우 좋음</span>
+            </div>
           </div>
           
           <div className="w-full">
