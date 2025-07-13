@@ -71,9 +71,8 @@ export default function TodayEmotionInput({ initialMainEmotion = null, onReset }
     setSelectedMainEmotion(null);
     setSelectedSubEmotion(null);
     setQuestion("");
-    setLoading(true);
-    setAiComment(null);
     if (onReset) onReset();
+    setLoading(true);
     try {
       const logs = getLast7Logs();
       const res = await fetch('/api/ai-comment', {
