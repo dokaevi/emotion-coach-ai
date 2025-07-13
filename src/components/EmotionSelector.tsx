@@ -44,11 +44,9 @@ export default function EmotionSelector({ onEmotionSelect }: EmotionSelectorProp
             <span className="text-lg font-semibold">{selectedCategory.name}</span>
           </div>
         </div>
-        
         <div className="text-sm text-gray-600 mb-4">
           좀 더 구체적으로 말해볼까요?
         </div>
-
         <div className="grid grid-cols-2 gap-3">
           {selectedCategory.subEmotions.map((subEmotion) => (
             <button
@@ -67,23 +65,21 @@ export default function EmotionSelector({ onEmotionSelect }: EmotionSelectorProp
 
   return (
     <div className="space-y-4">
-      <div className="text-center mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">오늘의 감정을 선택하세요</h3>
-        <p className="text-sm text-gray-600">가장 가까운 감정을 골라주세요</p>
+      {/* 안내문구 한 줄만 상단에 */}
+      <div className="text-left text-base font-semibold mb-3 pl-2">
+        오늘의 감정을 선택해 기록해보세요
       </div>
-
-      <div className="grid grid-cols-2 gap-4">
+      {/* 감정 카드 2줄 3개씩 */}
+      <div className="grid grid-cols-3 gap-3 px-2 mb-2">
         {EMOTION_CATEGORIES.map((category) => (
           <button
             key={category.id}
             onClick={() => handleCategorySelect(category)}
-            className="p-4 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all text-center group"
+            className="flex flex-col items-center p-4 rounded-xl border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all shadow-sm"
             style={{ borderColor: category.color + '40' }}
           >
-            <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">
-              {category.emoji}
-            </div>
-            <div className="font-medium text-gray-900">{category.name}</div>
+            <span className="text-3xl mb-1">{category.emoji}</span>
+            <span className="text-sm font-medium">{category.name}</span>
           </button>
         ))}
       </div>

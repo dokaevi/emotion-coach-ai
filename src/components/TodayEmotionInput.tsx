@@ -94,9 +94,8 @@ export default function TodayEmotionInput() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-white max-w-sm mx-auto relative p-4">
-      <h1 className="text-lg font-bold text-center mt-6 mb-4">오늘의 감정을 기록해보세요</h1>
-      
+    <div className="flex flex-col items-center w-full">
+      {/* 안내문구 완전 제거, EmotionSelector에서만 노출 */}
       {!selectedMainEmotion ? (
         <EmotionSelector onEmotionSelect={handleEmotionSelect} />
       ) : (
@@ -113,7 +112,6 @@ export default function TodayEmotionInput() {
               감정 다시 선택하기
             </button>
           </div>
-          
           {/* 감정 점수 입력 */}
           <div className="w-full">
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -138,7 +136,6 @@ export default function TodayEmotionInput() {
               <span>매우 좋음</span>
             </div>
           </div>
-          
           <div className="w-full">
             <textarea
               className="w-full border rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 resize-none"
@@ -154,7 +151,6 @@ export default function TodayEmotionInput() {
           </div>
         </div>
       )}
-      
       {selectedMainEmotion && (
         <button
           className={`fixed bottom-4 left-1/2 -translate-x-1/2 w-[90vw] max-w-sm py-3 rounded-lg font-semibold text-white transition
@@ -166,13 +162,11 @@ export default function TodayEmotionInput() {
           {loading ? 'AI 코멘트 생성 중...' : '저장하기'}
         </button>
       )}
-      
       {saved && (
         <div className="mt-4 text-center text-green-600 font-semibold">
           감정이 저장되었습니다! 🎉
         </div>
       )}
-      
       {aiComment && (
         <div className="mt-8 p-4 bg-blue-50 rounded-lg text-gray-800 text-sm whitespace-pre-line">
           <div className="font-semibold mb-2">💭 AI 코멘트</div>

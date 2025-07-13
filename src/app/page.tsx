@@ -1,73 +1,81 @@
 'use client';
-import { useState, useEffect } from 'react';
 import TodayEmotionInput from '@/components/TodayEmotionInput';
-import EmotionTrendGraph from '@/components/EmotionTrendGraph';
-import WeeklySummaryTabs from '@/components/WeeklySummaryTabs';
-import EmotionBarChart from '@/components/EmotionBarChart';
-import { EmotionLog } from '@/types/emotion';
+import LogoHeader from '@/components/LogoHeader';
+import Link from 'next/link';
+import EmotionSelector from '@/components/EmotionSelector';
+import { useState } from 'react';
+import { EMOTION_CATEGORIES } from '@/types/emotion';
+
+const analysisCards = [
+  {
+    id: 'score',
+    label: '지난7일 감정점수',
+    icon: '📈',
+  },
+  {
+    id: 'graph',
+    label: '최근7일 감정그래프',
+    icon: '📊',
+  },
+  {
+    id: 'summary',
+    label: '감정 요약 카드',
+    icon: '📝',
+  },
+  {
+    id: 'dist',
+    label: '감정 분포/시각화',
+    icon: '🌈',
+  },
+];
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'input' | 'analysis'>('input');
-  const [logs, setLogs] = useState<EmotionLog[]>([]);
-
-  useEffect(() => {
-    const storedLogs = JSON.parse(localStorage.getItem('emotionLogs') || '[]');
-    setLogs(storedLogs);
-  }, []);
-
-  const handleLogUpdate = () => {
-    const storedLogs = JSON.parse(localStorage.getItem('emotionLogs') || '[]');
-    setLogs(storedLogs);
-  };
+  // 감정 선택 상태 관리 (감정 입력 UI 분리)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [showInput, setShowInput] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-sm mx-auto bg-white min-h-screen">
-        {/* 헤더 */}
-        <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 text-center">
-          <h1 className="text-xl font-bold">감정 코칭 AI</h1>
-          <p className="text-sm opacity-90">당신의 감정을 기록하고 이해해보세요</p>
+      <div className="max-w-sm mx-auto bg-white min-h-screen flex flex-col items-stretch px-0 pb-8">
+        {/* 1. 로고/타이틀/서브카피 */}
+        <LogoHeader />
+        {/* 2. 분석 결과 카드 2x2 */}
+        <div className="grid grid-cols-2 gap-4 px-4 mt-2 mb-8">
+          {analysisCards.map(card => (
+            <Link
+              key={card.id}
+              href={`/analysis#${card.id}`}
+              className="flex flex-col items-center justify-center border border-blue-200 rounded-xl h-24 bg-white hover:bg-blue-50 transition shadow-sm text-center"
+            >
+              <span className="text-2xl mb-2">{card.icon}</span>
+              <span className="font-semibold text-base">{card.label}</span>
+            </Link>
+          ))}
         </div>
-
-        {/* 탭 네비게이션 */}
-        <div className="flex border-b">
-          <button
-            onClick={() => setActiveTab('input')}
-            className={`flex-1 py-3 text-sm font-medium transition-colors ${
-              activeTab === 'input'
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            감정 입력
-          </button>
-          <button
-            onClick={() => setActiveTab('analysis')}
-            className={`flex-1 py-3 text-sm font-medium transition-colors ${
-              activeTab === 'analysis'
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            분석 결과
-          </button>
+        {/* 3. 감정 입력 안내문구 */}
+        <div className="text-center text-base font-semibold mb-3">
+          오늘의 감정을 선택해 기록해보세요
         </div>
-
-        {/* 탭 컨텐츠 */}
-        <div className="p-4">
-          {activeTab === 'input' ? (
+        {/* 4. 감정카드 2x3 (메인 강조) */}
+        <div className="grid grid-cols-3 gap-4 px-4 mb-8">
+          {EMOTION_CATEGORIES.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => { setSelectedCategory(category.id); setShowInput(true); }}
+              className="flex flex-col items-center p-4 rounded-xl border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all shadow-sm text-lg font-medium"
+              style={{ borderColor: category.color + '40' }}
+            >
+              <span className="text-3xl mb-1">{category.emoji}</span>
+              <span className="text-sm font-medium">{category.name}</span>
+            </button>
+          ))}
+        </div>
+        {/* 5. 감정 입력 UI (선택 시 노출) */}
+        {showInput && (
+          <div className="px-4">
             <TodayEmotionInput />
-          ) : (
-            <div className="space-y-4">
-              <EmotionTrendGraph />
-              <EmotionBarChart logs={logs} />
-              <div className="bg-white rounded-xl shadow p-4">
-                <h3 className="text-base font-semibold mb-3">주간 요약</h3>
-                <WeeklySummaryTabs />
-              </div>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
