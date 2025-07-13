@@ -19,16 +19,16 @@ function getLast7Logs(): EmotionLog[] {
 interface TodayEmotionInputProps {
   initialMainEmotion?: string | null;
   onReset?: () => void;
+  setAiComment?: (comment: string | null) => void;
 }
 
-export default function TodayEmotionInput({ initialMainEmotion = null, onReset }: TodayEmotionInputProps) {
+export default function TodayEmotionInput({ initialMainEmotion = null, onReset, setAiComment }: TodayEmotionInputProps) {
   const [selectedMainEmotion, setSelectedMainEmotion] = useState<string | null>(initialMainEmotion);
   const [selectedSubEmotion, setSelectedSubEmotion] = useState<string | null>(null);
   const [question, setQuestion] = useState<string>("");
   const [memo, setMemo] = useState("");
   const [score, setScore] = useState<number>(5);
   const [saved, setSaved] = useState(false);
-  const [aiComment, setAiComment] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -81,9 +81,9 @@ export default function TodayEmotionInput({ initialMainEmotion = null, onReset }
         body: JSON.stringify({ logs }),
       });
       const data = await res.json();
-      setAiComment(data.comment || 'AI 코멘트 생성 실패');
+      if (setAiComment) setAiComment(data.comment || 'AI 코멘트 생성 실패');
     } catch {
-      setAiComment('AI 코멘트 요청 중 오류 발생');
+      if (setAiComment) setAiComment('AI 코멘트 요청 중 오류 발생');
     } finally {
       setLoading(false);
     }
@@ -178,13 +178,6 @@ export default function TodayEmotionInput({ initialMainEmotion = null, onReset }
       {saved && (
         <div className="mt-4 text-center text-green-600 font-semibold">
           감정이 저장되었습니다! 🎉
-        </div>
-      )}
-      {/* AI 코멘트는 saved가 true이거나 aiComment가 있을 때 항상 하단에 노출 */}
-      {(saved || aiComment) && aiComment && (
-        <div className="mt-8 p-4 bg-blue-50 rounded-lg text-gray-800 text-sm whitespace-pre-line">
-          <div className="font-semibold mb-2">💭 AI 코멘트</div>
-          {aiComment}
         </div>
       )}
     </div>

@@ -14,6 +14,7 @@ const analysisCards = [
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [aiComment, setAiComment] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -53,7 +54,14 @@ export default function Home() {
         {/* 감정 입력 프로세스: 감정카드 선택 시 한 번에 노출 */}
         {selectedCategory && (
           <div className="px-4">
-            <TodayEmotionInput initialMainEmotion={selectedCategory} onReset={() => setSelectedCategory(null)} />
+            <TodayEmotionInput initialMainEmotion={selectedCategory} onReset={() => setSelectedCategory(null)} setAiComment={setAiComment} />
+          </div>
+        )}
+        {/* AI 코멘트는 항상 하단에 노출 */}
+        {aiComment && (
+          <div className="mt-8 p-4 bg-blue-50 rounded-lg text-gray-800 text-sm whitespace-pre-line">
+            <div className="font-semibold mb-2">💭 AI 코멘트</div>
+            {aiComment}
           </div>
         )}
       </div>
